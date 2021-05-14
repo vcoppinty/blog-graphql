@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Mutations::CreateUser, type: :request do
+
   let(:input) do
     {
       name: 'userTest',
@@ -17,8 +18,8 @@ RSpec.describe Mutations::CreateUser, type: :request do
 
   it 'is successful ?' do
 
-    userTest = User.find_by(email: "user@example.com")
-    userTest.delete unless userTest.nil?
+    user_test = User.find_by(email: "user@example.com")
+    user_test.delete unless user_test.nil?
 
     post('/graphql', params: { query: query, variables: { name: input[:name], authProvider: input[:auth_provider] } }, as: :json)
 
