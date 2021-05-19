@@ -20,6 +20,7 @@ gem 'graphql', '>= 1.9.17'
 
 # A collection of utilities for building GraphQL APIs.
 gem 'graphql-extras'
+gem 'search_object_graphql'
 
 gem "rspec"
 gem "rspec-rails"

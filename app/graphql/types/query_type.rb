@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Types
   class QueryType < Types::BaseObject
 
@@ -19,10 +20,12 @@ module Types
     field :articles, [Types::ArticleType], null: false, description: "Find All articles"
     field :myArticles, [Types::ArticleType], null: false, description: "Find my articles"
 
-    # Article fields
+    # Article Filter
+    field :all_articles, resolver: Resolvers::ArticlesSearch
+
+    # Comment fields
     field :comments, [Types::CommentType], null: false, description: "Find All comments"
     field :myComments, [Types::CommentType], null: false, description: "Find my comments"
-
 
     # User method
     def users
