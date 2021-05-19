@@ -19,6 +19,8 @@ module Mutations
 
       raise NotAuthorized if article.user != context[:current_user]
 
+      Comment.where(article_id: id).destroy_all
+
       article.destroy!
 
       { article: article }
