@@ -24,8 +24,8 @@ RSpec.describe Mutations::CreateArticle, type: :request do
 
     # Error User must Exist if not sign in before
     # Login test User
-    post('/graphql', params: { query: querySignInUser, variables: { credentials: input_for_sign_in_user[:credentials] } }, as: :json)
-
+    #post('/graphql', params: { query: querySignInUser, variables: { credentials: input_for_sign_in_user[:credentials] } }, as: :json)
+    do_graphql_request
     # Create Article
     post('/graphql', params: { query: queryCreateArticle, variables: { title: input[:title], body: input[:body] } }, as: :json)
 

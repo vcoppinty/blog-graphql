@@ -18,10 +18,9 @@ RSpec.describe Mutations::CreateUser, type: :request do
 
   it 'is successful ?' do
 
-    user_test = User.find_by(email: "user@example.com")
-    user_test.delete unless user_test.nil?
+    #do_graphql_request
 
-    post('/graphql', params: { query: query, variables: { name: input[:name], authProvider: input[:auth_provider] } }, as: :json)
+    #post('/graphql', params: { query: query, variables: { name: input[:name], authProvider: input[:auth_provider] } }, as: :json)
 
     expect(response.parsed_body).to be_successful_query
 
@@ -29,7 +28,7 @@ RSpec.describe Mutations::CreateUser, type: :request do
     expect(data).to be_successful_query
 
     expect(data['createUser'].symbolize_keys).to include(
-      name: 'userTest'
+      name: 'spec_test'
     )
 
   end
@@ -43,6 +42,18 @@ RSpec.describe Mutations::CreateUser, type: :request do
         }
       }
     GRAPHQL
+  end
+
+  def variables
+    {
+      name: 'spec_test',
+      auth_provider: {
+        credentials: {
+          email: 'spec_test@test.com',
+          password: '123'
+        }
+      }
+    }
   end
 end
 
