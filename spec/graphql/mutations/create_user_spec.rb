@@ -4,23 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Mutations::CreateUser, type: :request do
 
-  let(:input) do
-    {
-      name: 'userTest',
-      auth_provider: {
-        credentials: {
-          email: 'user@example.com',
-          password: 'password'
-        }
-      }
-    }
-  end
-
   it 'is successful ?' do
 
-    #do_graphql_request
-
-    #post('/graphql', params: { query: query, variables: { name: input[:name], authProvider: input[:auth_provider] } }, as: :json)
+    do_graphql_request
 
     expect(response.parsed_body).to be_successful_query
 
@@ -31,6 +17,7 @@ RSpec.describe Mutations::CreateUser, type: :request do
       name: 'spec_test'
     )
 
+    expect{do_graphql_request}.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   def query
@@ -47,7 +34,7 @@ RSpec.describe Mutations::CreateUser, type: :request do
   def variables
     {
       name: 'spec_test',
-      auth_provider: {
+      authProvider: {
         credentials: {
           email: 'spec_test@test.com',
           password: '123'

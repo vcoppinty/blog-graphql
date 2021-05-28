@@ -9,15 +9,11 @@ module Mutations
 
     type Types::CommentType
 
-    field :body, String, null: false
-    field :article, Types::ArticleType, null: false
-    field :user, Types::UserType, null: false
-
     def resolve(body: nil, article_id: nil, rating: nil)
 
       article = Article.find(article_id)
 
-      Comment.create!(
+      comment = Comment.create!(
         body: body,
         article: article,
         user: context[:current_user],
@@ -28,6 +24,7 @@ module Mutations
       article.rating = (total / (article.comments.count +1)).to_f.ceil
 
       article.save
+      comment
     end
   end
 end

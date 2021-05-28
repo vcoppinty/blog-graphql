@@ -1,28 +1,17 @@
 module Mutations
   class SignInUser < BaseMutation
-    null true
+    field :access_token, Types::AccessTokenType, null: true
 
-    argument :credentials, Types::AuthProviderCredentialsInput, required: false
+    argument :email, String, required: true
+    argument :password, String, required: true
 
-    field :token, String, null: true
-    field :user, Types::UserType, null: true
-
-    def resolve(credentials: nil)
-      # basic validation
-      return unless credentials
-
-      user = User.find_by email: credentials[:email]
-
-      # ensures we have the correct user
-      return unless user
-      return unless user.authenticate(credentials[:password])
-
-      # use Ruby on Rails - ActiveSupport::MessageEncryptor, to build a token
-      crypt = ActiveSupport::MessageEncryptor.new(Rails.application.credentials.secret_key_base.byteslice(0..31))
-      token = crypt.encrypt_and_sign("user-id:#{ user.id }")
-
-      context[:session][:token] = token
-      { user: user, token: token }
+    def resolve(email:, password:)
+      user = User.authenticate(email, password)
+      access_token = user&.access_tokens&.create!(
+        application_id: Doorkeeper::Application.first.id,
+        expires_in: 1.day
+      )
+      { access_token: access_token}
     end
   end
 end

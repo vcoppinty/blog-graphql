@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 module Requests
@@ -12,26 +11,28 @@ module Requests
     # by default. It's convenient when you don't have anything really complicated to test.
     # And when you need to test multiple requests, you can call it with arguments.
     # AccessToken is also generated in here rather than in specs files like I did for a long time
-    def do_graphql_request(user: nil, qry: nil, var: nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-=begin
-      token = if user&.id || current_user&.id
-                "6Q-trzrphMgAwNBGFsUpPwEzEIdCcbb9WALf3L5-4S4"
-              end
-=end
-      token = "6Q-trzrphMgAwNBGFsUpPwEzEIdCcbb9WALf3L5-4S4"
-
+    def do_graphql_request(qry: nil, var: nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       post '/graphql', params: {
         query: qry || query,
         variables: var || variables
       }, headers: {
-        Authorization: "Bearer #{token&.token}"
-      }
+        Authorization: "Bearer #{token}"
+      }, as: :json
       # puts json
     end
 
     # by default, variables is empty indeed
     def variables
       {}
+    end
+
+    def token
+      user = User.all.first
+      access_token = user&.access_tokens&.create!(
+        application_id: Doorkeeper::Application.first.id,
+        expires_in: 1.day
+      )
+      access_token.token
     end
 
     # I managed to format every errors on my API with the same type
