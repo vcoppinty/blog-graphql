@@ -33,7 +33,7 @@ class Resolvers::ArticlesSearch < GraphQL::Schema::Resolver
     scope = Article.all
 
     scope = scope.where('title LIKE ?', "%#{value[:title_contains]}%") if value[:title_contains]
-    scope = scope.where('description LIKE ?', "%#{value[:description_contains]}%") if value[:description_contains]
+    scope = scope.where('body LIKE ?', "%#{value[:body_contains]}%") if value[:body_contains]
     scope = scope.where('rating = ?', "#{value[:rating_is]}") if value[:rating_is]
 
     branches << scope
